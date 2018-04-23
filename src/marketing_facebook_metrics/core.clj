@@ -1,6 +1,6 @@
-(ns marketing-facebook-metrics.core)
+(ns marketing-facebook-metrics.core
+  (:require [uswitch.lambada.core :refer [deflambdafn]]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(deflambdafn de.novatec.MarketingFacebookMetrics
+  [in out ctx]
+  (println "Hello, World!"))
