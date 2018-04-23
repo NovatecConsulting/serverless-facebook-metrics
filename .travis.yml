@@ -1,0 +1,9 @@
+language: clojure
+before_install:
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
+install:
+  - lein uberjar
+script:
+  - lein uberjar
+  - "./upload.sh"
