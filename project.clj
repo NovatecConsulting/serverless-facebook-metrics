@@ -9,4 +9,5 @@
                  [environ "1.1.0"]]
   :profiles {:uberjar {:aot :all}
              :dev [:dev-env]}
+  :plugins [[lein-environ "1.1.0"]]
   :uberjar-name "marketing-facebook-metrics.jar")
