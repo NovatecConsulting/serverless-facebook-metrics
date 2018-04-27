@@ -37,19 +37,22 @@
         new-posts (parse-posts resp)]
     new-posts))
 
+(defn ok-response
+  [body]
+  {:statusCode 200
+   :isBase64Encoded false
+   :body body})
+
 (defn handle-lambda
   [in out ctx]
   (let [input (if in
                 (json/parse-stream (io/reader in))
                 nil)]
     (println "Request:\n" (pprint input))
-    (let [page-data (get-fb-posts)
-          serialized (str page-data)]
-      (println "Response:\n" serialized)
-      (doto (io/writer out)
-        (.write serialized)
-        (.flush))
-      page-data)))
+    (let [response (ok-response (get-fb-posts))]
+      (println "Response:\n" response)
+      (json/generate-stream response (io/writer out))
+      response)))
 
 (deflambdafn de.novatec.MarketingFacebookMetrics
   [in out ctx]
