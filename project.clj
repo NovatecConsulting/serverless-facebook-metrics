@@ -6,7 +6,9 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [uswitch/lambada "0.1.2"]
                  [clj-http "3.8.0"]
-                 [environ "1.1.0"]]
+                 [environ "1.1.0"]
+                 [cheshire "5.8.0"]
+                 [clojure.java-time "0.3.2"]]
   :profiles {:uberjar {:aot :all}
              :dev [:dev-env]}
   :plugins [[lein-environ "1.1.0"]]
