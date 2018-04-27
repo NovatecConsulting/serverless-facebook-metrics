@@ -4,14 +4,15 @@
             [environ.core :refer [env]]
             [cheshire.core :as json]
             [java-time :as time]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clojure.pprint :refer [pprint]]))
 
 (defmacro catch-all
   [form]
   `(try
      ~form
      (catch Exception e#
-       (clojure.pprint/pprint (ex-data e#)))))
+       (pprint (ex-data e#)))))
 
 (defn parse-timestamp
   [post]
@@ -45,11 +46,15 @@
 
 (defn handle-lambda
   [in out ctx]
-  (println "Getting general data for the NovaTec Holding facebook page.")
-  (let [page-data (get-fb-posts)]
-    (doto (io/writer out)
-      (.write (str page-data))
-      (.flush))))
+  (let [input (if in
+                (json/parse-stream (io/reader in))
+                nil)]
+    (println "Function called with parameters:\n" (pprint input))
+    (let [page-data (get-fb-posts)]
+      (doto (io/writer out)
+        (.write (str page-data))
+        (.flush))
+      page-data)))
 
 (deflambdafn de.novatec.MarketingFacebookMetrics
   [in out ctx]
