@@ -47,8 +47,9 @@
   [in out ctx]
   (println "Getting general data for the NovaTec Holding facebook page.")
   (let [page-data (get-fb-posts)]
-    (with-open [w (io/writer out)]
-      (.write w page-data))))
+    (doto (io/writer out)
+      (.write (str page-data))
+      (.flush))))
 
 (deflambdafn de.novatec.MarketingFacebookMetrics
   [in out ctx]
