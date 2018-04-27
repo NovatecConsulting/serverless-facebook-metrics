@@ -41,6 +41,7 @@
   [body]
   {:statusCode 200
    :isBase64Encoded false
+   :headers {}
    :body body})
 
 (defn handle-lambda
