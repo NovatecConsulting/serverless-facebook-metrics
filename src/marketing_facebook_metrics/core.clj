@@ -7,13 +7,6 @@
             [clojure.java.io :as io]
             [clojure.pprint :refer [pprint]]))
 
-(defmacro catch-all
-  [form]
-  `(try
-     ~form
-     (catch Exception e#
-       (pprint (ex-data e#)))))
-
 (defn parse-timestamp
   [post]
   (update post :created_time #(->> %
@@ -49,10 +42,12 @@
   (let [input (if in
                 (json/parse-stream (io/reader in))
                 nil)]
-    (println "Function called with parameters:\n" (pprint input))
-    (let [page-data (get-fb-posts)]
+    (println "Request:\n" (pprint input))
+    (let [page-data (get-fb-posts)
+          serialized (str page-data)]
+      (println "Response:\n" serialized)
       (doto (io/writer out)
-        (.write (str page-data))
+        (.write serialized)
         (.flush))
       page-data)))
 
