@@ -45,7 +45,7 @@
 (defn handle-lambda
   [in out ctx]
   (println "Getting general data for the NovaTec Holding facebook page.")
-  (let [page-data (get-fb-posts "metrics-test")]
+  (let [page-data (get-fb-posts)]
     (.write out page-data)))
 
 (deflambdafn de.novatec.MarketingFacebookMetrics
