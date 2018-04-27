@@ -3,7 +3,8 @@
             [clj-http.client :as client]
             [environ.core :refer [env]]
             [cheshire.core :as json]
-            [java-time :as time]))
+            [java-time :as time]
+            [clojure.java.io :as io]))
 
 (defmacro catch-all
   [form]
@@ -46,7 +47,8 @@
   [in out ctx]
   (println "Getting general data for the NovaTec Holding facebook page.")
   (let [page-data (get-fb-posts)]
-    (.write out page-data)))
+    (with-open [w (io/writer out)]
+      (.write w page-data))))
 
 (deflambdafn de.novatec.MarketingFacebookMetrics
   [in out ctx]
