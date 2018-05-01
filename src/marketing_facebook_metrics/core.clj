@@ -58,5 +58,5 @@
 #_(macroexpand '(deflambdafn de.novatec.MarketingFacebookMetrics
    [in out ctx]
    (handle-lambda in out ctx)))
-(do (clojure.core/gen-class :name de.novatec.MarketingFacebookMetrics :prefix G__20464 :implements [com.amazonaws.services.lambda.runtime.RequestStreamHandler]) (clojure.core/defn G__20464handleRequest [this in out ctx] (handle-lambda in out ctx)))
+#_(do (clojure.core/gen-class :name de.novatec.MarketingFacebookMetrics :prefix G__20464 :implements [com.amazonaws.services.lambda.runtime.RequestStreamHandler]) (clojure.core/defn G__20464handleRequest [this in out ctx] (handle-lambda in out ctx)))
 
