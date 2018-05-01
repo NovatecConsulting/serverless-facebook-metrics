@@ -5,7 +5,10 @@
             [cheshire.core :as json]
             [java-time :as time]
             [clojure.java.io :as io]
-            [clojure.pprint :refer [pprint]]))
+            [clojure.pprint :refer [pprint]])
+  (:gen-class
+   :name de.novatec.MarketingFacebookMetrics
+   :methods [[handleRequest [String Object] String]]))
 
 (defn parse-timestamp
   [post]
@@ -38,16 +41,22 @@
     new-posts))
 
 (defn handle-lambda
-  [in out ctx]
+  [in #_out ctx]
   (let [input (if in
                 (json/parse-stream (io/reader in))
                 nil)]
     (println "Request:\n" (pprint input))
     (let [response (get-fb-posts)]
       (println "Response:\n" response)
-      (json/generate-stream response (io/writer out))
-      response)))
+      ;; (json/generate-stream response (io/writer out))
+      (json/generate-string response))))
 
-(deflambdafn de.novatec.MarketingFacebookMetrics
-  [in out ctx]
-  (handle-lambda in out ctx))
+(defn -handleRequest
+  [in ctx]
+  (handle-lambda in ctx))
+
+#_(macroexpand '(deflambdafn de.novatec.MarketingFacebookMetrics
+   [in out ctx]
+   (handle-lambda in out ctx)))
+(do (clojure.core/gen-class :name de.novatec.MarketingFacebookMetrics :prefix G__20464 :implements [com.amazonaws.services.lambda.runtime.RequestStreamHandler]) (clojure.core/defn G__20464handleRequest [this in out ctx] (handle-lambda in out ctx)))
+
