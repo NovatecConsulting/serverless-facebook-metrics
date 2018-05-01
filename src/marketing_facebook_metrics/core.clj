@@ -37,20 +37,13 @@
         new-posts (parse-posts resp)]
     new-posts))
 
-(defn ok-response
-  [body]
-  {:statusCode 200
-   :isBase64Encoded false
-   :headers {}
-   :body body})
-
 (defn handle-lambda
   [in out ctx]
   (let [input (if in
                 (json/parse-stream (io/reader in))
                 nil)]
     (println "Request:\n" (pprint input))
-    (let [response (ok-response (get-fb-posts))]
+    (let [response (get-fb-posts)]
       (println "Response:\n" response)
       (json/generate-stream response (io/writer out))
       response)))
