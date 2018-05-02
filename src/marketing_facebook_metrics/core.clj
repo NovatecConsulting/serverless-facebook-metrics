@@ -79,7 +79,7 @@
     `(do
        (gen-class
         :name ~class-name
-        :methods [[~fun-name [Object Object] Object]])
+        :methods [[~fun-name [String Context] String]])
        (defn ~fun-name ~args ~@body)
        (defn ~method-name
          ~(into ['this] args)
