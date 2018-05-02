@@ -38,17 +38,17 @@
     new-posts))
 
 (defn handle-lambda
-  [in #_out ctx]
+  [in out ctx]
   (let [input (if in
                 (json/parse-stream (io/reader in))
                 nil)]
     (println "Request:\n" (pprint input))
     (let [response (get-fb-posts)]
       (println "Response:\n" response)
-      ;; (json/generate-stream response (io/writer out))
+      (json/generate-stream response (io/writer out))
       (json/generate-string response))))
 
 (deflambdafn de.novatec.MarketingFacebookMetrics
-   [in ctx]
-   (handle-lambda in ctx))
+   [in out ctx]
+   (handle-lambda in out ctx))
 
