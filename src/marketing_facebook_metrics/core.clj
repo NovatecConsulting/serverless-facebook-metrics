@@ -85,7 +85,7 @@
          ~(into ['this] args)
          (~fun-name ~@args)))))
 
-(deflambdafn de.novatec.MarketingFacebookMetrics
+(deflambdafn de.novatec.MarketingFacebookMetrics handleRequest
    [in ctx]
    (handle-lambda in ctx))
 
