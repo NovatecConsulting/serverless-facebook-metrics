@@ -39,11 +39,15 @@
 
 (defn handle-lambda
   [in out ctx]
-  (let [input (if in
-                (json/parse-stream (io/reader in))
+  (let [{:keys [id token] :as input} (if in
+                (json/parse-stream (io/reader in) true)
                 nil)]
     (println "Request:\n" (pprint input))
-    (let [response (get-fb-posts)]
+    (let [response (get-fb-posts (or id
+                                     "me")
+                                 (or token
+                                     (:app-token env)
+                                     (throw (ex-info "Must pass a token as query-param or as environment variable"))))]
       (println "Response:\n" response)
       (json/generate-stream response (io/writer out))
       (json/generate-string response))))
