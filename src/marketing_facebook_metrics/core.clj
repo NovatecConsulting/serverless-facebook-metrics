@@ -26,10 +26,10 @@
 
 (defn get-fb-posts
   "Calls Facebook and returns information about the item"
-  []
-  (let [resp (-> (str "https://graph.facebook.com/v2.11/" "me")
+  [id token]
+  (let [resp (-> (str "https://graph.facebook.com/v2.11/" id)
                  (client/get
-                  {:query-params {"access_token" (:app-token env)
+                  {:query-params {"access_token" token
                                   "fields" "posts{created_time}"}
                    :debug false})
                  :body
