@@ -7,22 +7,43 @@
             [clojure.java.io :as io]
             [clojure.pprint :refer [pprint]]))
 
-(defn parse-timestamp
+(defn month->quarter
+  "Converts a month (represented as the month number as a string) to its quarter (also a string)
+  Example:
+  (month->quarter \"3\") -> \"1\"
+  (month->quarter \"7\") -> \"3\"
+  "
+  [month]
+  (case month
+    ("01" "02" "03") "1"
+    ("04" "05" "06") "2"
+    ("07" "08" "09") "3"
+    ("10" "11" "12") "4"
+    (throw (ex-info
+            (str "cannot get quarter for month: " month)
+            {}))))
+
+(defn timestamp->quarter
   [post]
-  (update post :created_time #(->> %
-                                   (take 7)
-                                   (apply str))))
+  (update post :created_time
+          (fn [ts]
+            (let [year-month (->> ts
+                                  (take 7)
+                                  (apply str))
+                  [year month] (.split year-month "-")
+                  quarter (month->quarter month)]
+              (str year "-" quarter)))))
 
 (defn parse-posts
   [{:keys [posts]}]
   (->> posts
        :data
-       (mapv parse-timestamp)
+       (mapv timestamp->quarter)
        (group-by :created_time)
        (into [])
-       (mapv (fn [[ts posts]] [ts (count posts)]))
-       (sort-by first)
-       #_(mapv (fn [[ts posts]] [ts (mapv #(dissoc % :created_time) posts)]))))
+       (mapv (fn [[quarter posts]] {:quarter quarter
+                                    :posts (count posts)}))
+       (sort-by first)))
 
 (defn get-fb-posts
   "Calls Facebook and returns information about the item"
@@ -40,8 +61,8 @@
 (defn handle-lambda
   [in out ctx]
   (let [{:keys [id token] :as input} (if in
-                (json/parse-stream (io/reader in) true)
-                nil)]
+                                       (json/parse-stream (io/reader in) true)
+                                       nil)]
     (println "Request:\n" (pprint input))
     (let [response (get-fb-posts (or id
                                      "me")
@@ -53,6 +74,6 @@
       (json/generate-string response))))
 
 (deflambdafn de.novatec.MarketingFacebookMetrics
-   [in out ctx]
-   (handle-lambda in out ctx))
+  [in out ctx]
+  (handle-lambda in out ctx))
 
