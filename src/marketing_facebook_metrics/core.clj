@@ -63,12 +63,14 @@
   (let [{:keys [id token] :as input} (if in
                                        (json/parse-stream (io/reader in) true)
                                        nil)]
-    (let [response (get-fb-posts (or id
-                                     "me")
-                                 (or token
-                                     (:app-token env)
-                                     (throw (ex-info "Must pass a token as query-param or as environment variable"))))]
     (println "Request: " input)
+    (let [token (or
+                 (if (empty? token) nil token)
+                 ;; empty string token is converted to nil, else the token from the environment won't be used
+                 (:app-token env)
+                 (throw (ex-info "Must pass a token as query-param or as environment variable")))
+          id (or id "me")
+          response (get-fb-posts id token)]
       (println "Response: " response)
       (json/generate-stream response (io/writer out))
       (json/generate-string response))))
