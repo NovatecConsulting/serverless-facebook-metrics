@@ -1,4 +1,4 @@
-# marketing-facebook-metrics
+# serverless-facebook-metrics
 
 AWS Lambda function that gets statistics about Facebook activity.
 
